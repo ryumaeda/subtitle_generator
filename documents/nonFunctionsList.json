@@ -1,0 +1,65 @@
+{
+  "key": "nonFunctionsList",
+  "value": [
+    {
+      "non_function_name": "レスポンス時間",
+      "description": "動画アップロードから字幕生成までの処理時間は動画の長さの2倍以内に抑える",
+      "id": "NON-001",
+      "category": "パフォーマンス"
+    },
+    {
+      "non_function_name": "データ暗号化",
+      "description": "アップロードされた動画ファイルとS3バケット内のデータは暗号化して保存する",
+      "id": "NON-002",
+      "category": "セキュリティ"
+    },
+    {
+      "non_function_name": "システム稼働時間",
+      "description": "システムの稼働率は99.9%以上を維持する",
+      "id": "NON-003",
+      "category": "可用性"
+    },
+    {
+      "non_function_name": "同時処理能力",
+      "description": "最大100ユーザーが同時に動画をアップロードしても処理できるようにする",
+      "id": "NON-004",
+      "category": "スケーラビリティ"
+    },
+    {
+      "non_function_name": "操作性",
+      "description": "初めてのユーザーでも5分以内に字幕生成の基本操作を習得できるUIを提供する",
+      "id": "NON-005",
+      "category": "ユーザビリティ"
+    },
+    {
+      "non_function_name": "ブラウザ対応",
+      "description": "主要なWebブラウザ(Chrome Firefox Safari Edge)の最新バージョンで動作することを保証する",
+      "id": "NON-006",
+      "category": "互換性"
+    },
+    {
+      "non_function_name": "モジュール化",
+      "description": "システムの各機能をモジュール化し 将来の機能追加や変更が容易になるようにする",
+      "id": "NON-007",
+      "category": "保守性"
+    },
+    {
+      "non_function_name": "バックアップ",
+      "description": "ユーザーデータと学習データを毎日バックアップし 障害時に24時間以内に復旧できるようにする",
+      "id": "NON-008",
+      "category": "信頼性"
+    },
+    {
+      "non_function_name": "個人情報保護",
+      "description": "個人情報保護法に準拠したデータ管理を行い ユーザーの同意なしに個人情報を第三者に提供しない",
+      "id": "NON-009",
+      "category": "コンプライアンス"
+    },
+    {
+      "non_function_name": "API提供",
+      "description": "将来的な機能拡張のために RESTful APIを提供し 外部システムとの連携を可能にする",
+      "id": "NON-010",
+      "category": "拡張性"
+    }
+  ]
+}

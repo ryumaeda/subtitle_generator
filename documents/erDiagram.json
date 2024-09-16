@@ -1,0 +1,6 @@
+{
+  "key": "erDiagram",
+  "value": {
+    "mermaid": "erDiagram\n    USERS ||--o{ FILTERS : \"所有\"\n    USERS ||--o{ SUBTITLE_STYLES : \"所有\"\n    USERS ||--o{ TRAINING_VIDEOS : \"所有\"\n\n    USERS {\n        uuid id PK\n        varchar(255) email\n        timestamp created_at\n    }\n\n    FILTERS {\n        uuid id PK\n        uuid user_id FK\n        text filter_string\n        timestamp created_at\n    }\n\n    SUBTITLE_STYLES {\n        uuid id PK\n        uuid user_id FK\n        varchar(100) font_name\n        integer font_size\n        varchar(7) font_color\n        varchar(7) background_color\n        timestamp created_at\n    }\n\n    TRAINING_VIDEOS {\n        uuid id PK\n        uuid user_id FK\n        text video_url\n        jsonb subtitle_data\n        timestamp created_at\n    }"
+  }
+}

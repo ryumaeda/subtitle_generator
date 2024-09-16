@@ -1,0 +1,195 @@
+{
+  "key": "tableDefinition",
+  "value": [
+    {
+      "regulation": "PRIMARY KEY",
+      "defaultValue": "uuid_generate_v4()",
+      "dataType": "uuid",
+      "column": "id",
+      "description": "ユーザーの一意識別子",
+      "id": "TAB-001",
+      "foreignKey": "",
+      "table": "users"
+    },
+    {
+      "regulation": "UNIQUE NOT NULL",
+      "defaultValue": "",
+      "dataType": "varchar(255)",
+      "column": "email",
+      "description": "ユーザーのメールアドレス",
+      "id": "TAB-002",
+      "foreignKey": "",
+      "table": "users"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "now()",
+      "dataType": "timestamp with time zone",
+      "column": "created_at",
+      "description": "ユーザーアカウント作成日時",
+      "id": "TAB-003",
+      "foreignKey": "",
+      "table": "users"
+    },
+    {
+      "regulation": "PRIMARY KEY",
+      "defaultValue": "uuid_generate_v4()",
+      "dataType": "uuid",
+      "column": "id",
+      "description": "フィルターの一意識別子",
+      "id": "TAB-004",
+      "foreignKey": "",
+      "table": "filters"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "",
+      "dataType": "uuid",
+      "column": "user_id",
+      "description": "フィルターを所有するユーザーのID",
+      "id": "TAB-005",
+      "foreignKey": "users.id",
+      "table": "filters"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "",
+      "dataType": "text",
+      "column": "filter_string",
+      "description": "フィルタリングに使用する文字列",
+      "id": "TAB-006",
+      "foreignKey": "",
+      "table": "filters"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "now()",
+      "dataType": "timestamp with time zone",
+      "column": "created_at",
+      "description": "フィルター作成日時",
+      "id": "TAB-007",
+      "foreignKey": "",
+      "table": "filters"
+    },
+    {
+      "regulation": "PRIMARY KEY",
+      "defaultValue": "uuid_generate_v4()",
+      "dataType": "uuid",
+      "column": "id",
+      "description": "字幕スタイルの一意識別子",
+      "id": "TAB-008",
+      "foreignKey": "",
+      "table": "subtitle_styles"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "",
+      "dataType": "uuid",
+      "column": "user_id",
+      "description": "字幕スタイルを所有するユーザーのID",
+      "id": "TAB-009",
+      "foreignKey": "users.id",
+      "table": "subtitle_styles"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "",
+      "dataType": "varchar(100)",
+      "column": "font_name",
+      "description": "字幕のフォント名",
+      "id": "TAB-010",
+      "foreignKey": "",
+      "table": "subtitle_styles"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "16",
+      "dataType": "integer",
+      "column": "font_size",
+      "description": "字幕のフォントサイズ",
+      "id": "TAB-011",
+      "foreignKey": "",
+      "table": "subtitle_styles"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "'#FFFFFF'",
+      "dataType": "varchar(7)",
+      "column": "font_color",
+      "description": "字幕のフォント色 (16進数)",
+      "id": "TAB-012",
+      "foreignKey": "",
+      "table": "subtitle_styles"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "'#000000'",
+      "dataType": "varchar(7)",
+      "column": "background_color",
+      "description": "字幕の背景色 (16進数)",
+      "id": "TAB-013",
+      "foreignKey": "",
+      "table": "subtitle_styles"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "now()",
+      "dataType": "timestamp with time zone",
+      "column": "created_at",
+      "description": "字幕スタイル作成日時",
+      "id": "TAB-014",
+      "foreignKey": "",
+      "table": "subtitle_styles"
+    },
+    {
+      "regulation": "PRIMARY KEY",
+      "defaultValue": "uuid_generate_v4()",
+      "dataType": "uuid",
+      "column": "id",
+      "description": "学習用動画の一意識別子",
+      "id": "TAB-015",
+      "foreignKey": "",
+      "table": "training_videos"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "",
+      "dataType": "uuid",
+      "column": "user_id",
+      "description": "学習用動画を所有するユーザーのID",
+      "id": "TAB-016",
+      "foreignKey": "users.id",
+      "table": "training_videos"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "",
+      "dataType": "text",
+      "column": "video_url",
+      "description": "学習用動画のS3 URL",
+      "id": "TAB-017",
+      "foreignKey": "",
+      "table": "training_videos"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "{\"subtitles\": [{\"start_time\": \"00:00:00\", \"end_time\": \"00:00:05\", \"text\": \"サンプル字幕\"}]}",
+      "dataType": "jsonb",
+      "column": "subtitle_data",
+      "description": "学習用動画の字幕データ",
+      "id": "TAB-018",
+      "foreignKey": "",
+      "table": "training_videos"
+    },
+    {
+      "regulation": "NOT NULL",
+      "defaultValue": "now()",
+      "dataType": "timestamp with time zone",
+      "column": "created_at",
+      "description": "学習用動画アップロード日時",
+      "id": "TAB-019",
+      "foreignKey": "",
+      "table": "training_videos"
+    }
+  ]
+}

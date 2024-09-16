@@ -1,0 +1,6 @@
+{
+  "key": "systemArchitecture",
+  "value": {
+    "mermaid": "graph TD\n    subgraph フロントエンド\n    UF[ユーザーインターフェース]\n    end\n\n    subgraph バックエンド\n    API[APIサーバー]\n    ML[機械学習エンジン]\n    end\n\n    subgraph データベース\n    DB[(メインDB)]\n    S3[(S3バケット)]\n    end\n\n    subgraph 外部サービス\n    STT[音声認識サービス]\n    end\n\n    UF -->|1. 動画アップロード| API\n    API -->|2. 動画保存| S3\n    API -->|3. 音声認識リクエスト| STT\n    STT -->|4. テキストデータ| API\n    API -->|5. 字幕生成リクエスト| ML\n    ML -->|6. 学習データ取得| DB\n    ML -->|7. 字幕データ| API\n    API -->|8. 字幕データ保存| DB\n    API -->|9. 字幕ファイル| UF\n    UF -->|10. 字幕デザイン設定| API\n    API -->|11. 設定保存| DB\n    UF -->|12. 学習データ追加| API\n    API -->|13. 学習データ保存| DB"
+  }
+}
