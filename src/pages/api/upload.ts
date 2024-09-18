@@ -45,4 +45,13 @@ const upload = async (req: NextApiRequest, res: NextApiResponse<UploadResponse>)
   }
 };
 
+// リクエストボディのサイズ制限を30MBに設定
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '30mb',
+    },
+  },
+};
+
 export default upload;
