@@ -4,6 +4,7 @@ import Topbar from '@/components/Topbar';
 import { supabase } from '@/supabase';
 import axios from 'axios';
 import { FaUpload, FaFont, FaFilter, FaPlay, FaDownload } from 'react-icons/fa';
+import FileUploader from '../components/FileUploader';
 
 const SubtitleGeneration = () => {
   const router = useRouter();
@@ -198,6 +199,8 @@ const SubtitleGeneration = () => {
           </a>
         )}
       </div>
+      <h1 className="text-3xl font-bold mb-6">ファイルアップロードテスト</h1>
+        <FileUploader />
     </div>
   );
 };

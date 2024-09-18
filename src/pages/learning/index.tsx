@@ -43,36 +43,7 @@ const LearningPage = () => {
   };
 
   const handleLearning = async () => {
-    if (!file) return;
-
-    setIsLearning(true);
-    setProgress(0);
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await axios.post('/api/add-training-data', formData, {
-        onUploadProgress: (progressEvent) => {
-          const percentage = (progressEvent.loaded / (progressEvent.total || 1)) * 100;
-          setProgress(Math.round(percentage));
-        },
-      });
-
-      if (response.data.success) {
-        alert('学習が完了しました');
-        fetchLearningHistory();
-      } else {
-        throw new Error('学習に失敗しました');
-      }
-    } catch (error) {
-      console.error('学習中にエラーが発生しました:', error);
-      alert('学習中にエラーが発生しました');
-    } finally {
-      setIsLearning(false);
-      setProgress(0);
-      setFile(null);
-    }
+  //  hoge
   };
 
   return (
