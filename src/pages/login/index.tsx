@@ -1,71 +1,92 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import { FcGoogle } from 'react-icons/fc';
-import { supabase } from '@/supabase';
-import Topbar from '@/components/Topbar';
+import { useState, useEffect, useRef } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { supabase } from "@/supabase";
+import * as THREE from "three";
 
 const Login = () => {
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        router.push('/home');
-      }
-    });
+    if (canvasRef.current) {
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      const renderer = new THREE.WebGLRenderer({
+        canvas: canvasRef.current,
+        alpha: true,
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
 
-    return () => {
-      if (authListener && authListener.subscription) {
-        authListener.subscription.unsubscribe();
-      }
-    };
-  }, [router]);
+      const geometry = new THREE.TorusKnotGeometry(10, 3, 200, 32);
+      const material = new THREE.MeshPhongMaterial({
+        color: 0xf0f0f0,
+        wireframe: true,
+        shininess: 100,
+        specular: 0xffffff,
+      });
+      const torusKnot = new THREE.Mesh(geometry, material);
+      scene.add(torusKnot);
+
+      const light = new THREE.PointLight(0xffffff, 1, 100);
+      light.position.set(0, 0, 20);
+      scene.add(light);
+
+      camera.position.z = 30;
+
+      const animate = () => {
+        requestAnimationFrame(animate);
+        torusKnot.rotation.x += 0.01;
+        torusKnot.rotation.y += 0.01;
+        torusKnot.rotation.z += 0.005;
+        renderer.render(scene, camera);
+      };
+
+      animate();
+
+      return () => {
+        renderer.dispose();
+      };
+    }
+  }, []);
 
   const handleGoogleLogin = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: "google",
       });
       if (error) throw error;
     } catch (error) {
-      setError('ログインに失敗しました。もう一度お試しください。');
+      setError("ログインに失敗しました。もう一度お試しください。");
     }
   };
 
   return (
-    <div className="min-h-screen h-full flex flex-col bg-gray-100">
-      <Topbar />
-      <div className="flex-grow flex items-center justify-center px-4">
-        <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-md">
-          <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              ログイン
-            </h2>
-          </div>
-          <button
-            onClick={handleGoogleLogin}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 border-gray-300"
-          >
-            <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-              <FcGoogle className="h-5 w-5" />
-            </span>
-            Googleでログイン
-          </button>
-          {error && (
-            <div className="text-red-600 text-center mt-2">{error}</div>
-          )}
-          <div className="text-sm text-center">
-            <Link href="/terms" className="font-medium text-indigo-600 hover:text-indigo-500">
-              利用規約
-            </Link>
-            {' | '}
-            <Link href="/privacy" className="font-medium text-indigo-600 hover:text-indigo-500">
-              プライバシーポリシー
-            </Link>
-          </div>
+    <div className="relative flex-grow flex items-center justify-center px-4 min-h-screen bg-gradient-to-r from-purple-500 to-indigo-600">
+      <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />
+      <div className="relative z-10 max-w-md w-full space-y-8 bg-black bg-opacity-30 p-10 rounded-xl shadow-lg backdrop-filter backdrop-blur-lg flex flex-col items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-4xl font-extrabold text-white mb-4">
+            AI-Powered 字幕生成アプリ
+          </h2>
+          <p className="text-xl text-gray-300">
+            スタイリッシュな動画編集を始めよう
+          </p>
         </div>
+        <button
+          onClick={handleGoogleLogin}
+          className="group relative w-64 flex justify-center py-3 px-4 border border-transparent text-lg font-medium rounded-full text-black bg-white hover:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105"
+        >
+          <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+            <FcGoogle className="h-6 w-6" />
+          </span>
+          Login
+        </button>
+        {error && <div className="text-red-400 text-center mt-2">{error}</div>}
       </div>
     </div>
   );
