@@ -1,42 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import Topbar from '@/components/Topbar';
-import { supabase } from '@/supabase';
-import axios from 'axios';
-import { FaUpload, FaFont, FaFilter, FaPlay, FaDownload } from 'react-icons/fa';
-import FileUploader from '../components/FileUploader';
+// pages/SubtitleGeneration.tsx
+import React, { useState, useEffect } from "react";
+import { NextRouter, useRouter } from "next/router";
+import Topbar from "@/components/Topbar";
+import { supabase } from "@/supabase";
+import { FaUpload, FaFont, FaFilter, FaDownload } from "react-icons/fa";
+import FileUploader from "../components/FileUploader";
 
 const SubtitleGeneration = () => {
   const router = useRouter();
-  const [videoFile, setVideoFile] = useState<File | null>(null);
   const [subtitleDesign, setSubtitleDesign] = useState({
-    font: 'Noto Sans JP',
+    font: "Noto Sans JP",
     size: 16,
-    color: '#FFFFFF',
-    backgroundColor: '#000000',
+    color: "#FFFFFF",
+    backgroundColor: "#000000",
   });
-  const [filter, setFilter] = useState('');
-  const [progress, setProgress] = useState(0);
-  const [downloadUrl, setDownloadUrl] = useState('');
+  const [filter, setFilter] = useState("");
+  const [downloadUrl, setDownloadUrl] = useState<string>("");
+  const [checking, setChecking] = useState<boolean>(false);
 
   useEffect(() => {
     // ユーザーの認証状態を確認
     const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login');
+        (router as unknown as NextRouter).push("/login");
       }
     };
     checkAuth();
-  }, []);
+  }, [router]);
 
-  const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setVideoFile(event.target.files[0]);
-    }
-  };
-
-  const handleSubtitleDesignChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleSubtitleDesignChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setSubtitleDesign({ ...subtitleDesign, [e.target.name]: e.target.value });
   };
 
@@ -44,48 +41,31 @@ const SubtitleGeneration = () => {
     setFilter(e.target.value);
   };
 
-  const handleConvert = async () => {
-    if (!videoFile) return;
+  const handleUploadSuccess = (uploadedFileName: string) => {
+    startChecking(uploadedFileName + ".fcpxmld.zip");
+  };
 
-    setProgress(0);
-    setDownloadUrl('');
-
-    try {
-      // 音声テキスト変換
-      const formData = new FormData();
-      formData.append('video', videoFile);
-      const { data: speechToTextData } = await axios.post('/api/speech-to-text', formData, {
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
-          setProgress(percentCompleted / 4);
-        },
-      });
-
-      // 字幕ファイル生成
-      const { data: subtitleFileData } = await axios.post('/api/generate-subtitle-file', {
-        textData: speechToTextData,
-        subtitleDesign,
-        filter,
-      });
-      setProgress(50);
-
-      // 要点抽出字幕生成
-      const { data: summarizedSubtitlesData } = await axios.post('/api/generate-summarized-subtitles', {
-        subtitleData: subtitleFileData,
-      });
-      setProgress(75);
-
-      // 話者別字幕スタイル適用
-      const { data: finalSubtitlesData } = await axios.post('/api/apply-speaker-styles', {
-        subtitleData: summarizedSubtitlesData,
-      });
-      setProgress(100);
-
-      setDownloadUrl(finalSubtitlesData.url);
-    } catch (error) {
-      console.error('変換エラー:', error);
-      alert('変換中にエラーが発生しました。もう一度お試しください。');
-    }
+  const startChecking = (uploadedFileName: string) => {
+    setChecking(true);
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(
+          `/api/check-fcpxml?fileName=${encodeURIComponent(uploadedFileName)}`
+        );
+        const data = await res.json();
+        if (data.exists) {
+          setDownloadUrl(
+            `https://${process.env.NEXT_PUBLIC_FCPXML_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${uploadedFileName}`
+          );
+          setChecking(false);
+          clearInterval(interval);
+        }
+      } catch (error) {
+        console.error("Error checking FCPXML file:", error);
+        setChecking(false);
+        clearInterval(interval);
+      }
+    }, 5000); // 5秒ごとにチェック
   };
 
   return (
@@ -93,18 +73,6 @@ const SubtitleGeneration = () => {
       <Topbar />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 text-center">字幕生成画面</h1>
-
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <FaUpload className="mr-2" /> 動画アップロード
-          </h2>
-          <input
-            type="file"
-            accept="video/*"
-            onChange={handleVideoUpload}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4 flex items-center">
@@ -170,22 +138,24 @@ const SubtitleGeneration = () => {
           />
         </div>
 
-        <button
-          onClick={handleConvert}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded flex items-center justify-center mb-8"
-        >
-          <FaPlay className="mr-2" /> 変換実行
-        </button>
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <FaUpload className="mr-2" /> 字幕生成
+          </h2>
+          <FileUploader onSuccess={handleUploadSuccess} />
+        </div>
 
-        {progress > 0 && (
+        {checking && (
           <div className="mb-8">
             <div className="bg-gray-200 rounded-full h-4 mb-2">
               <div
-                className="bg-blue-500 h-4 rounded-full"
-                style={{ width: `${progress}%` }}
+                className="bg-blue-500 h-4 rounded-full animate-pulse"
+                style={{ width: `100%` }}
               ></div>
             </div>
-            <p className="text-center">{progress}% 完了</p>
+            <p className="text-center">
+              .fcpxmlファイルの生成を待っています...
+            </p>
           </div>
         )}
 
@@ -195,12 +165,11 @@ const SubtitleGeneration = () => {
             download
             className="block w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded text-center"
           >
-            <FaDownload className="inline-block mr-2" /> 字幕ファイルをダウンロード
+            <FaDownload className="inline-block mr-2" />{" "}
+            .fcpxmlファイルをダウンロード
           </a>
         )}
       </div>
-      <h1 className="text-3xl font-bold mb-6">ファイルアップロードテスト</h1>
-        <FileUploader />
     </div>
   );
 };
