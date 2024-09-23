@@ -1,6 +1,0 @@
-{
-  "key": "tobeOperationFlow",
-  "value": {
-    "mermaid": "graph TD\n    subgraph ユーザー\n    A[動画をアップロード] --> B[字幕設定をカスタマイズ]\n    B --> C[変換ボタンをクリック]\n    C --> D[字幕付きfcpxml/prprojファイルをダウンロード]\n    D --> E[学習用データをアップロード]\n    E --> F[学習ボタンをクリック]\n    F --> G[フィルター文字列を設定]\n    end\n\n    subgraph フロントエンド\n    H[動画ファイルを受け取る] --> I[S3にアップロード]\n    J[字幕設定を保存] --> K[変換リクエストをバックエンドに送信]\n    L[ダウンロードリンクを表示] --> M[学習用データを受け取る]\n    M --> N[学習リクエストをバックエンドに送信]\n    O[フィルター設定を保存]\n    end\n\n    subgraph バックエンド\n    P[S3から動画ファイルを取得] --> Q[AWS Transcribeで音声をテキスト変換]\n    Q --> R[AIモデルで要点抽出・話者識別]\n    R --> S[字幕デザインを適用]\n    S --> T[フィルタリング処理]\n    T --> U[fcpxml/prprojファイルを生成]\n    V[学習用データを処理] --> W[AIモデルを更新]\n    end\n\n    A --> H\n    B --> J\n    C --> K\n    G --> O\n    K --> P\n    U --> L\n    L --> D\n    E --> M\n    F --> N\n    N --> V\n    O --> T"
-  }
-}

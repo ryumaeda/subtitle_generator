@@ -1,6 +1,0 @@
-{
-  "key": "asisOperationFlow",
-  "value": {
-    "mermaid": "graph TD\n    subgraph ユーザー\n    A[動画をアップロード] --> B[字幕設定をカスタマイズ]\n    B --> C[変換ボタンをクリック]\n    C --> D[字幕付きfcpxmlファイルをダウンロード]\n    D --> E[学習用データをアップロード]\n    E --> F[学習ボタンをクリック]\n    end\n\n    subgraph フロントエンド\n    G[動画ファイルを受け取る] --> H[S3にアップロード]\n    I[字幕設定を保存] --> J[変換リクエストをバックエンドに送信]\n    K[ダウンロードリンクを表示] --> L[学習用データを受け取る]\n    L --> M[学習リクエストをバックエンドに送信]\n    end\n\n    subgraph バックエンド\n    N[S3から動画ファイルを取得] --> O[AWS Transcribeで音声をテキスト変換]\n    O --> P[AIモデルで要点抽出・話者識別]\n    P --> Q[字幕デザインを適用]\n    Q --> R[fcpxmlファイルを生成]\n    S[学習用データを処理] --> T[AIモデルを更新]\n    end\n\n    A --> G\n    B --> I\n    C --> J\n    J --> N\n    R --> K\n    K --> D\n    E --> L\n    F --> M\n    M --> S"
-  }
-}

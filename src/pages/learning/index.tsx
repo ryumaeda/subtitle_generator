@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Head from "next/head";
 import { supabase } from "@/supabase";
 import Topbar from "@/components/Topbar";
 import { FiUpload, FiPlay } from "react-icons/fi";
@@ -51,20 +50,10 @@ const LearningPage = () => {
   };
 
   return (
-    <div className="min-h-screen h-full bg-gray-100">
-      <Head>
-        <title>学習画面 - 字幕生成システム</title>
-        <meta
-          name="description"
-          content="学習用の動画をアップロードし システムの精度を向上させる画面"
-        />
-      </Head>
-
+    <div className="relative flex-grow flex flex-col min-h-screen bg-gradient-to-r from-purple-500 to-indigo-600">
       <Topbar />
 
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-gray-800">学習画面</h1>
-
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-2xl font-semibold mb-4 text-gray-700">
             動画アップロード

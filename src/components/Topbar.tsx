@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { NextRouter, useRouter } from "next/router";
 import { FaBars, FaTimes, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { supabase } from "@/supabase";
+import Image from "next/image";
+import { User } from "@supabase/supabase-js";
 
 const Topbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const router = useRouter() as unknown as NextRouter; // 修正
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter() as unknown as NextRouter;
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data) {
+        setUser(data.user as User);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -18,12 +32,12 @@ const Topbar: React.FC = () => {
   };
 
   return (
-    <header className="bg-white shadow-md">
+    <header className="bg-gradient-to-r from-purple-500 to-indigo-600 shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
           <div className="flex items-center">
             <Link href="/">
-              <span className="text-2xl font-bold text-blue-600">
+              <span className="text-3xl font-bold text-white">
                 AI-Powered 字幕生成アプリ
               </span>
             </Link>
@@ -32,7 +46,7 @@ const Topbar: React.FC = () => {
           <nav className="hidden md:flex space-x-4">
             <Link
               href="/"
-              className={`text-gray-600 hover:text-blue-600 text-xl ${
+              className={`text-white hover:shadow-lg text-xl ${
                 (router as unknown as NextRouter).pathname === "/"
                   ? "font-bold"
                   : ""
@@ -42,7 +56,7 @@ const Topbar: React.FC = () => {
             </Link>
             <Link
               href="/subtitle-generation"
-              className={`text-gray-600 hover:text-blue-600 text-xl ${
+              className={`text-white hover:shadow-lg text-xl ${
                 router.pathname === "/subtitle-generation" ? "font-bold" : ""
               }`}
             >
@@ -50,7 +64,7 @@ const Topbar: React.FC = () => {
             </Link>
             <Link
               href="/learning"
-              className={`text-gray-600 hover:text-blue-600 text-xl ${
+              className={`text-white hover:shadow-lg text-xl ${
                 router.pathname === "/learning" ? "font-bold" : ""
               }`}
             >
@@ -59,17 +73,27 @@ const Topbar: React.FC = () => {
           </nav>
 
           <div className="flex items-center space-x-4">
-            <button className="text-gray-600 hover:text-blue-600">
-              <FaUser className="text-xl" />
-            </button>
+            {user ? (
+              <Image
+                src={user?.user_metadata?.avatar_url}
+                alt="User Avatar"
+                className="w-8 h-8 rounded-full"
+                width={32}
+                height={32}
+              />
+            ) : (
+              <button className="text-white hover:shadow-lg">
+                <FaUser className="text-xl" />
+              </button>
+            )}
             <button
-              className="text-gray-600 hover:text-blue-600"
+              className="text-white hover:shadow-lg"
               onClick={handleLogout}
             >
               <FaSignOutAlt className="text-xl" />
             </button>
             <button
-              className="md:hidden text-gray-600 hover:text-blue-600"
+              className="md:hidden text-white hover:shadow-lg"
               onClick={toggleMenu}
             >
               {isMenuOpen ? (
@@ -87,7 +111,7 @@ const Topbar: React.FC = () => {
           <nav className="flex flex-col space-y-2 py-4 px-4">
             <Link
               href="/"
-              className={`text-gray-600 hover:text-blue-600 ${
+              className={`text-white hover:shadow-lg ${
                 router.pathname === "/" ? "font-bold" : ""
               }`}
             >
@@ -95,7 +119,7 @@ const Topbar: React.FC = () => {
             </Link>
             <Link
               href="/subtitle-generation"
-              className={`text-gray-600 hover:text-blue-600 ${
+              className={`text-white hover:shadow-lg ${
                 router.pathname === "/subtitle-generation" ? "font-bold" : ""
               }`}
             >
@@ -103,14 +127,14 @@ const Topbar: React.FC = () => {
             </Link>
             <Link
               href="/learning"
-              className={`text-gray-600 hover:text-blue-600 ${
+              className={`text-white hover:shadow-lg ${
                 router.pathname === "/learning" ? "font-bold" : ""
               }`}
             >
               学習
             </Link>
             <button
-              className="text-left text-gray-600 hover:text-blue-600"
+              className="text-left text-white hover:shadow-lg"
               onClick={handleLogout}
             >
               ログアウト

@@ -1,6 +1,0 @@
-{
-  "key": "screenTransition",
-  "value": {
-    "mermaid": "graph LR\n    subgraph メイン画面\n    A[ログイン画面] --> B[ホーム画面]\n    B --> C[字幕生成画面]\n    B --> D[学習画面]\n    end\n\n    subgraph 字幕生成画面\n    C --> E[動画アップロード]\n    E --> F[字幕デザイン設定]\n    F --> G[フィルター設定]\n    G --> H[変換実行]\n    H --> I[ダウンロード]\n    end\n\n    subgraph 学習画面\n    D --> J[学習用動画アップロード]\n    J --> K[学習実行]\n    end\n\n    subgraph ハンバーガーメニュー\n    L[メニュー] --> B\n    L --> C\n    L --> D\n    L --> M[ログアウト]\n    end"
-  }
-}

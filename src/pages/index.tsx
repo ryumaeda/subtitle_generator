@@ -31,10 +31,10 @@ const Home: React.FC = () => {
   }, [router]);
 
   return (
-    <div className="min-h-screen h-full bg-gray-100">
+    <div className="relative flex-grow flex flex-col min-h-screen bg-gradient-to-r from-purple-500 to-indigo-600">
       <Topbar />
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-gray-800">
+        <h1 className="text-xl font-bold mb-8 text-white opacity-70">
           welcome to {user?.email}
         </h1>
 
